@@ -3,9 +3,9 @@
 	Properties
 	{
 		_MainTex("Main Texture", 2D) = "white" {}
-		_MaskTex("Mask Texture", 2D) = "white" {}
 		_ScrollTex ("Scroll Texture", 2D) = "white" {}
 		_ScrollSpeed("Scroll Speed", Range(0,5)) = 1
+		_ScrollMaskTex("Scroll Mask Texture", 2D) = "white" {}
 		_NoiseTex("Noise Texture", 2D) = "white" {}
 		_NoiseAmount("Noise Amount", Range(0,0.5)) = 1
 		_SparkleTex("Sparkle Texture", 2D) = "white" {}
@@ -46,10 +46,10 @@
 			sampler2D _MainTex;
 			float4 _MainTex_ST;
 
-			sampler2D _MaskTex;
-
 			sampler2D _ScrollTex;
 			float4 _ScrollTex_ST;
+
+			sampler2D _ScrollMaskTex;
 
 			float _ScrollSpeed;
 
@@ -73,8 +73,12 @@
 			v2f vert (appdata v)
 			{
 				float2 scrollUv = v.uv;
-				scrollUv.x += _Time * _ScrollSpeed;
-				scrollUv.y += sin(_Time * ScrollFrequency) * ScrollAmplitude;
+
+				// Scroll the uv to the left
+				scrollUv.x += _Time.y * _ScrollSpeed;
+
+				// Scroll the uv up and down
+				scrollUv.y += sin(_Time.y * ScrollFrequency) * ScrollAmplitude;
 
 				v2f o;
 				o.vertex = UnityObjectToClipPos(v.vertex);
@@ -85,23 +89,29 @@
 			
 			fixed4 frag (v2f i) : SV_Target
 			{
+				// Get the main color
 				fixed4 mainColor = tex2D(_MainTex, i.mainUv);
-				fixed4 maskColor = tex2D(_MaskTex, i.mainUv);
-				fixed2 noise = tex2D(_NoiseTex, i.mainUv);
 
+				// Find the noise offset
+				fixed2 noiseOffset = tex2D(_NoiseTex, i.mainUv).rg;
+				noiseOffset = (noiseOffset - 0.5) * 2;
+
+				// Get the distorted scroll layer color
 				float2 scrollUv = i.scrollUv;
-				scrollUv += noise * _NoiseAmount;
+				scrollUv += noiseOffset * _NoiseAmount;
 				fixed4 scrollColor = tex2D(_ScrollTex, scrollUv);
 
-				float scrollLerpAmount = scrollColor.r * (1-maskColor.r); // TODO, make it alpha
-				float4 color = mainColor + scrollColor * scrollLerpAmount;
+				// Mask the scroll layer
+				fixed4 maskColor = tex2D(_ScrollMaskTex, i.mainUv);
+				float scrollColorAmount = scrollColor.r * (1-maskColor.r); // TODO, make it alpha
+				float4 color = mainColor + scrollColor * scrollColorAmount;
 
+				// Add in the sparkle layer
 				float sparkleValue = tex2D(_SparkleTex, i.mainUv).r;
 				color.rgb += _SparkleColor * sparkleValue * _SparkleAmount;
 
+				// Dissolve the combined color
 				float dissolve = tex2D(_DissolveTex, i.mainUv);
-
-				//color.a = step(_DissolveAmount, dissolve);
 				float halfDissolveWidth = _DissolveWidth * 0.5;
 				color.a = smoothstep(_DissolveAmount - halfDissolveWidth, _DissolveAmount + halfDissolveWidth, dissolve);
 

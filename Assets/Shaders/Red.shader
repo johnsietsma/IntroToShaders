@@ -27,12 +27,14 @@
 			v2f vert (appdata v)
 			{
 				v2f o;
+				// Transform this vertex from object space to clip space
 				o.vertex = UnityObjectToClipPos(v.vertex);
 				return o;
 			}
 			
 			fixed4 frag (v2f i) : SV_Target
 			{
+				// Just return the color red for this fragment
 				return fixed4(1,0,0,1);
 			}
 			ENDCG

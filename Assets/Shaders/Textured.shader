@@ -1,8 +1,9 @@
-﻿Shader "Unlit/DefaultUnlit"
+﻿Shader "IntroShader/Textured"
 {
 	Properties
 	{
-		_MainTex ("Texture", 2D) = "white" {}
+		// This appears in the inspector, just like public C# variables
+		_MainTex("Main Texture", 2D) = "white" {}
 	}
 	SubShader
 	{
@@ -14,8 +15,6 @@
 			CGPROGRAM
 			#pragma vertex vert
 			#pragma fragment frag
-			// make fog work
-			#pragma multi_compile_fog
 			
 			#include "UnityCG.cginc"
 
@@ -27,30 +26,30 @@
 
 			struct v2f
 			{
-				float2 uv : TEXCOORD0;
-				UNITY_FOG_COORDS(1)
 				float4 vertex : SV_POSITION;
+				float2 uv : TEXCOORD0;
 			};
 
+			// This is the bridge from the property above into cg.
+			// A sampler contains our texture (and mip maps)
 			sampler2D _MainTex;
+
+			// This has the texture tiling and offsets
 			float4 _MainTex_ST;
-			
+
 			v2f vert (appdata v)
 			{
 				v2f o;
 				o.vertex = UnityObjectToClipPos(v.vertex);
+				// TRANSFORM_TEX will apply any tiling or offsets
 				o.uv = TRANSFORM_TEX(v.uv, _MainTex);
-				UNITY_TRANSFER_FOG(o,o.vertex);
 				return o;
 			}
 			
 			fixed4 frag (v2f i) : SV_Target
 			{
-				// sample the texture
-				fixed4 col = tex2D(_MainTex, i.uv);
-				// apply fog
-				UNITY_APPLY_FOG(i.fogCoord, col);
-				return col;
+				// Look up the sampler for the color at this uv coordinate
+				return tex2D(_MainTex, i.uv);
 			}
 			ENDCG
 		}
