@@ -3,10 +3,9 @@
 	Properties
 	{
 		_MainTex("Main Texture", 2D) = "white" {}
-		_NoiseTex ("Noise Texture", 2D) = "white" {}
+		_NoiseTex ("Noise Texture", 2D) = "black" {}
 		_NoiseAmount("Noise Amount", Range(0,0.5)) = 1
-		_DistortSpeed("Distort Speed", Float) = 5
-		_DistortAmount("Distort Amount", Float) = 0.1
+		_NoiseSpeed("Noise Speed", Float) = 5
 		_DistortMaskTex("Distort Mask Texture", 2D) = "white" {}
 	}
 	SubShader
@@ -44,8 +43,7 @@
 			sampler2D _DistortMaskTex;
 
 			float _NoiseAmount;
-			float _DistortSpeed;
-			float _DistortAmount;
+			float _NoiseSpeed;
 
 			v2f vert (appdata v)
 			{
@@ -59,13 +57,13 @@
 			fixed4 frag (v2f i) : SV_Target
 			{
 				fixed2 noiseUv = i.noiseUv;
-				noiseUv += sin(_Time.y * _DistortSpeed) * _DistortAmount;
+				noiseUv.y -= _Time.y * _NoiseSpeed;
 
 				// The noise texture uses the red and green channels to store the noise
 				fixed2 noiseOffset = tex2D(_NoiseTex, noiseUv).rg;
 
 				// Rescale the noise from 0:1 to -1:1
-				//noiseOffset = (noiseOffset - 0.5) * 2;
+				noiseOffset = (noiseOffset - 0.5) * 2;
 			
 				fixed2 uv = i.mainUv;
 				// Apply the noise per pixel, scrolling was done in vert.

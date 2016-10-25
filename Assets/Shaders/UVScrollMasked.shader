@@ -63,7 +63,7 @@
 				
 				// If we multiple the scroll color by the mask
 				//   when the mask is 0 the scroll color disappears
-				return mainColor + scrollColor * (1-maskColor.r);
+				return mainColor + scrollColor * maskColor.r;
 			}
 			ENDCG
 		}
