@@ -15,15 +15,12 @@ public class CardController : MonoBehaviour {
 
     Material dissolveMaterial; // The material will do the dissolve.
 
-    // Define the strings for material properties here to avoid typos
-    const string DissolveAmountProperty = "_DissolveAmount";
-
     void Start()
     {
         // Get the material that will do the dissolve and make sure it has what we need.
         dissolveMaterial = GetComponent<MeshRenderer>().material;
         Assert.IsNotNull(dissolveMaterial, "Dissolve material required for dissolving");
-        Assert.IsTrue(dissolveMaterial.HasProperty(DissolveAmountProperty), "Dissolve material doesn't have a dissolve amount property");
+        Assert.IsTrue(dissolveMaterial.HasProperty("_DissolveAmount"), "Dissolve material doesn't have a dissolve amount property");
     }
 
     void Update () {
@@ -46,7 +43,7 @@ public class CardController : MonoBehaviour {
             float dissolveAmount = elapsedTime / dissolveTime;
 
             // Set the dissolve property in the material
-            dissolveMaterial.SetFloat(DissolveAmountProperty, dissolveAmount);
+            dissolveMaterial.SetFloat("_DissolveAmount", dissolveAmount);
 
             yield return null;
         }

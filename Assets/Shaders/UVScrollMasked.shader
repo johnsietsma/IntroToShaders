@@ -3,7 +3,7 @@
 	Properties
 	{
 		_MainTex("Main Texture", 2D) = "white" {}
-		_ScrollTex ("Scroll Texture", 2D) = "white" {}
+		_ScrollTex("Scroll Texture", 2D) = "white" {}
 		_ScrollSpeed("Scroll Speed", Range(0,5)) = 1
 		_ScrollMaskTex("Scroll Mask Texture", 2D) = "white" {}
 	}

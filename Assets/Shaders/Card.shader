@@ -70,19 +70,12 @@
 
 			sampler2D _CardOverlayTex;
 
-			const float ScrollAmplitude = 3;
-			const float ScrollFrequency = 5;
-
-			
 			v2f vert (appdata v)
 			{
 				float2 scrollUv = v.uv;
 
 				// Scroll the uv
 				scrollUv += _Time.y * fixed2(_ScrollSpeedU, _ScrollSpeedV);
-
-				// Scroll the uv up and down
-				scrollUv.y += sin(_Time.y * ScrollFrequency) * ScrollAmplitude;
 
 				v2f o;
 				o.vertex = UnityObjectToClipPos(v.vertex);
@@ -110,12 +103,12 @@
 
 				// Mask the scroll layer
 				fixed4 scrollMaskColor = tex2D(_ScrollMaskTex, i.mainUv);
-				float scrollColorAmount = scrollColor.r * scrollMaskColor.r; // TODO, make it alpha
+				float scrollColorAmount = scrollColor.r * scrollMaskColor.r;
 				float4 color = mainColor + scrollColor * scrollColorAmount;
 
 				// Add in the Additive layer
-				float AdditiveValue = tex2D(_AdditiveTex, i.mainUv).r;
-				color.rgb += _AdditiveColor * AdditiveValue * _AdditiveAmount;
+				float additiveValue = tex2D(_AdditiveTex, i.mainUv).r;
+				color.rgb += _AdditiveColor * additiveValue * _AdditiveAmount;
 
 				// Add the card overlay
 				float4 overlayColor = tex2D(_CardOverlayTex, i.mainUv);

@@ -70,7 +70,6 @@
 				uv += noiseOffset * _NoiseAmount;
 
 				fixed4 maskColor = tex2D(_DistortMaskTex, i.mainUv);
-
 				fixed4 distortedColor = tex2D(_MainTex, uv);
 				fixed4 mainColor = tex2D(_MainTex, i.mainUv);
 

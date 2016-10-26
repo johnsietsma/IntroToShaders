@@ -52,7 +52,7 @@
 			fixed4 frag (v2f i) : SV_Target
 			{
 				fixed4 color = tex2D(_MainTex, i.uv);
-				float dissolve = tex2D(_DissolveTex, i.uv);
+				float dissolve = tex2D(_DissolveTex, i.uv).r;
 
 				//
 				// Here are three ways to dissolve
