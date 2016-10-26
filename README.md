@@ -6,3 +6,4 @@ The slides are available at this link [http://bit.ly/IntroToShadersSlides](http:
 
 The card art in this project is used with permission from League of Geeks. It's copyrighted, please don't use it for any other purpose then for learning.
 
+You can do what you want with the rest of the project, feel free to reuse the code in your own projects.
