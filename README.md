@@ -1,4 +1,10 @@
-# IntroToShaders
+# Survey
+If you saw my talk please fill out this survey! It helps me improve and give better talks.
+http://tinyurl.com/IntroToShaders
+
+
+
+# Intro to Shaders
 
 The Unity project for an Introduction to Shaders presentation that was delivered at Unite Melbourne 2016.
 
