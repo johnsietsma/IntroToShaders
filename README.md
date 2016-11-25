@@ -1,8 +1,8 @@
 # Intro to Shaders
 
-The Unity project for an Introduction to Shaders presentation that was delivered at Unite Melbourne 2016.
+The Unity project for an Introduction to Shaders presentation.
 
-The slides are available at this link [http://bit.ly/IntroToShadersSlides](http://bit.ly/IntroToShadersSlides).
+* Melbourne Unite 2016: [Slides](http://bit.ly/IntroToShadersSlides), [Github Tag](https://github.com/johnsietsma/IntroToShaders/tree/MelbourneUnite2016)
 
 The card art in this project is used with permission from League of Geeks. It's copyrighted, please don't use it for any other purpose then for learning.
 
