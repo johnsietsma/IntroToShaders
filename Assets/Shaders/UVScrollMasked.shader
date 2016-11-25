@@ -3,9 +3,12 @@
 	Properties
 	{
 		_MainTex("Main Texture", 2D) = "white" {}
+		_MaskTex("Mask Texture", 2D) = "" {}
 		_ScrollTex("Scroll Texture", 2D) = "white" {}
-		_ScrollSpeed("Scroll Speed", Range(0,5)) = 1
+		_ScrollSpeedU("Scroll Speed U", Range(-5,5)) = 1
+		_ScrollSpeedV("Scroll Speed V", Range(-5,5)) = 1
 		_ScrollMaskTex("Scroll Mask Texture", 2D) = "white" {}
+		_AdditiveAmount("Additive Amount", Range(0,1)) = 1
 	}
 	SubShader
 	{
@@ -36,17 +39,23 @@
 			sampler2D _MainTex;
 			float4 _MainTex_ST;
 
+			sampler2D _MaskTex;
+
 			sampler2D _ScrollTex;
 			float4 _ScrollTex_ST;
 
+			float _AdditiveAmount;
+
 			sampler2D _ScrollMaskTex;
 
-			float _ScrollSpeed;
+			float _ScrollSpeedU;
+			float _ScrollSpeedV;
 
 			v2f vert (appdata v)
 			{
 				float2 scrollUv = v.uv;
-				scrollUv.x += _Time.y * _ScrollSpeed;
+				scrollUv.x += _Time.y * _ScrollSpeedU;
+				scrollUv.y += _Time.y * _ScrollSpeedV;
 
 				v2f o;
 				o.vertex = UnityObjectToClipPos(v.vertex);
@@ -58,12 +67,18 @@
 			fixed4 frag (v2f i) : SV_Target
 			{
 				fixed4 mainColor = tex2D(_MainTex, i.mainUv);
-				fixed4 maskColor = tex2D(_ScrollMaskTex, i.mainUv);
+				fixed maskValue = tex2D(_MaskTex, i.mainUv).r;
+
+				fixed4 scrollMaskValue = tex2D(_ScrollMaskTex, i.mainUv).r;
 				fixed4 scrollColor = tex2D(_ScrollTex, i.scrollUv);
 				
 				// If we multiple the scroll color by the mask
 				//   when the mask is 0 the scroll color disappears
-				return mainColor + scrollColor * maskColor.r;
+				fixed4 color = mainColor + scrollColor *_AdditiveAmount * scrollMaskValue;
+
+				clip(maskValue - 0.5);
+
+				return color;
 			}
 			ENDCG
 		}

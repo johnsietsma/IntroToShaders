@@ -4,7 +4,9 @@
 	{
 		_MainTex("Main Texture", 2D) = "white" {}
 		_ScrollTex ("Scroll Texture", 2D) = "white" {}
-		_ScrollSpeed("Scroll Speed", Range(0,5)) = 1
+		_ScrollSpeedU("Scroll Speed U", Range(-5,5)) = 1
+		_ScrollSpeedV("Scroll Speed V", Range(-5,5)) = 1
+
 	}
 	SubShader
 	{
@@ -38,7 +40,8 @@
 			sampler2D _ScrollTex;
 			float4 _ScrollTex_ST;
 
-			float _ScrollSpeed;
+			float _ScrollSpeedU;
+			float _ScrollSpeedV;
 
 			v2f vert (appdata v)
 			{
@@ -48,7 +51,8 @@
 				// _Time.y has the time since game start
 				// Make this texture scroll to the left by looking up
 				//   pixels to the right!
-				scrollUv.x += _Time.y * _ScrollSpeed;
+				scrollUv.x += _Time.y * _ScrollSpeedU;
+				scrollUv.y += _Time.y * _ScrollSpeedV;
 
 				v2f o;
 				o.vertex = UnityObjectToClipPos(v.vertex);
