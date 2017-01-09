@@ -76,6 +76,8 @@
 				//   when the mask is 0 the scroll color disappears
 				fixed4 color = mainColor + scrollColor *_AdditiveAmount * scrollMaskValue;
 
+				// This masks the entire quad, rather then just the scroll layer
+				//  Any mask value less then 0.5 will cause this fragment to be discarded
 				clip(maskValue - 0.5);
 
 				return color;

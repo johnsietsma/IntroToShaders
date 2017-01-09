@@ -93,13 +93,12 @@
 				fixed4 scrollMaskValue = tex2D(_ScrollMaskTex, i.mainUv).r;
 			
 				fixed2 distortedScrollUv = i.scrollUv;
-				// Apply the noise per pixel, scrolling was done in vert.
+				// Apply the noise per pixel, scrolling was done per vertex.
 				distortedScrollUv += noiseOffset * _NoiseAmount;
 
 				fixed4 distortedScrollColor = tex2D(_ScrollTex, distortedScrollUv);
 				fixed4 mainColor = tex2D(_MainTex, i.mainUv);
 				fixed4 color = mainColor + distortedScrollColor * _AdditiveAmount * scrollMaskValue;
-
 
 				return color;
 			}

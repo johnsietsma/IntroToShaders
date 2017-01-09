@@ -84,6 +84,7 @@
 			
 			fixed4 frag (v2f i) : SV_Target
 			{
+				// Clip fragments outside the mask
 				fixed cardMaskValue = tex2D(_MaskTex, i.mainUv).r;
 				clip(cardMaskValue - 0.5);
 
@@ -93,12 +94,12 @@
 
 				fixed4 scrollMaskValue = tex2D(_ScrollMaskTex, i.mainUv).r;
 
-				// Get the distorted scroll layer color
+				// Get the distorted scroll layer color and mask the result
 				float2 scrollUv = i.scrollUv;
 				scrollUv += noiseOffset * _NoiseAmount;
 				fixed4 scrollColor = tex2D(_ScrollTex, scrollUv) * scrollMaskValue * _ScrollAdditiveAmount;
 
- 				// Mask the scroll layer
+ 				// Add in the additive color
 				fixed4 mainColor = tex2D(_MainTex, i.mainUv);
 				fixed4 additiveColor = _AdditiveColor * _AdditiveAmount * scrollMaskValue;
 				float4 color = mainColor + additiveColor + scrollColor;
