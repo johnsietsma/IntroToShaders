@@ -69,8 +69,8 @@
 				fixed4 mainColor = tex2D(_MainTex, i.mainUv);
 				fixed maskValue = tex2D(_MaskTex, i.mainUv).r;
 
-				fixed4 scrollMaskValue = tex2D(_ScrollMaskTex, i.mainUv).r;
 				fixed4 scrollColor = tex2D(_ScrollTex, i.scrollUv);
+				fixed4 scrollMaskValue = tex2D(_ScrollMaskTex, i.mainUv).r;
 				
 				// If we multiple the scroll color by the mask
 				//   when the mask is 0 the scroll color disappears
